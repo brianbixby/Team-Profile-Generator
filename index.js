@@ -20,7 +20,7 @@ async function writeToFile(generatedHTML) {
 	}
 	catch (err) {
 		console.log("Write File Error");
-		return err;
+		throw err;
 	}
 }
 
@@ -44,8 +44,7 @@ async function mainMenu() {
 	}
 	catch (err) {
 		if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
-		else console.log(err);
-		return err;
+		else throw err;
 	}
 }
 
@@ -77,8 +76,7 @@ async function lastQuestion(employeeAnswers, role) {
 	}
 	catch (err) {
 		if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
-		else console.log(err);
-		return err;
+		else throw err;
 	}
 }
 
@@ -105,8 +103,7 @@ async function employeeQuestions(role) {
 	}
 	catch (err) {
 		if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
-		else console.log(err);
-		return err;
+		else throw err;
 	}
 }
 
