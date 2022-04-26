@@ -6,11 +6,62 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 
+const generateHTML = require("./src/generateHtml");
+
 const team = [];
+
+async function writeToFile(generatedHTML) {
+    try {
+        const writeFilePromise = util.promisify(fs.writeFile);
+        await writeFilePromise("./dist/index.html", generatedHTML);
+    }
+    catch(err) {
+        console.log("Write File Error");
+		return err;
+    }
+}
+
+async function mainMenu() {
+    try {
+        const employeeRoleAnswer = await inquirer.prompt([
+            {
+                type: 'list',
+                message: 'Please select the role of the employee you would like to add.',
+                name: 'role',
+                choices: ["ENGINEER", "INTERN", "DONE"]
+            }
+        ]);
+
+        if (employeeRoleAnswer.role == "ENGINEER" || employeeRoleAnswer.role == "INTERN") {
+            employeeQuestions(employeeRoleAnswer.role);
+        } else {
+            const generatedHTML = generateHTML(team);
+            await writeToFile(generatedHTML);
+        }
+    }
+    catch (err) {
+        if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
+        else console.log(err);
+    }
+}
 
 async function addIntern(employeeAnswers) {
     try {
+        const internAnswer = await inquirer.prompt([
+            {
+                name: "github",
+                message: `What is your INTERN'S SCHOOL?`,
+                type: "input"
+            }
+        ]);
 
+        console.log("employeeAnswers: ", employeeAnswers);
+        console.log("internAnswer: ", internAnswer);
+
+        const newIntern = new Intern(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, internAnswer.github);
+        team.push(newIntern);
+        console.log("team: ", team);
+        await mainMenu();
     }
     catch (err) {
         if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
@@ -20,7 +71,21 @@ async function addIntern(employeeAnswers) {
 
 async function addEngineer(employeeAnswers) {
     try {
+        const engineerAnswer = await inquirer.prompt([
+            {
+                name: "github",
+                message: `What is your ENGINEER'S GITHUB USERNAME?`,
+                type: "input"
+            }
+        ]);
 
+        console.log("employeeAnswers: ", employeeAnswers);
+        console.log("engineerAnswer: ", engineerAnswer);
+
+        const newEngineer = new Engineer(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, engineerAnswer.github);
+        team.push(newEngineer);
+        console.log("team: ", team);
+        await mainMenu();
     }
     catch (err) {
         if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
@@ -30,7 +95,7 @@ async function addEngineer(employeeAnswers) {
 
 async function addManager(employeeAnswers) {
     try {
-        const managerAnswers = await inquirer.prompt([
+        const managerAnswer = await inquirer.prompt([
             {
                 name: "officeNumber",
                 message: `What is your MANAGER'S OFFICE NUMBER?`,
@@ -39,11 +104,12 @@ async function addManager(employeeAnswers) {
         ]);
 
         console.log("employeeAnswers: ", employeeAnswers);
-        console.log("managerAnswers: ", managerAnswers);
+        console.log("managerAnswer: ", managerAnswer);
 
-        const newManager = new Manager(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, managerAnswers.officeNumber);
+        const newManager = new Manager(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, managerAnswer.officeNumber);
         team.push(newManager);
-        console.log(trainers);
+        console.log("team: ", team);
+        await mainMenu();
     }
     catch (err) {
         if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
