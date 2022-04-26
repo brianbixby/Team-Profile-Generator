@@ -35,8 +35,8 @@ node index.js
 
 ## Product
 
-![A screen shot of the Team Profile Generator in use.](.assets/screen-shot.png)
-[Walkthrough video that demonstrates the functionality](https://watch.screencastify.com/v/FUxd2iqxS1E0XwX69ilB)
+![A screen shot of the Team Profile Generator in use.](./assets/screen-shot.png)
+[Walkthrough video that demonstrates the functionality](https://watch.screencastify.com/v/Xbv0qX4A9xs2xf5PnCN7)
 
 ## Questions
 
