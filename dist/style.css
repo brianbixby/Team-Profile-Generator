@@ -1,0 +1,62 @@
+.team-heading {
+	background-color: #E64856;
+	color: #FFF;
+}
+
+.card-header {
+	background-color: #0277F7;
+	color: #FFF;
+}
+
+.card-body {
+	background-color: #F6F6FA;
+}
+
+.card {
+	box-shadow: 10px 10px 5px #aaaaaa;
+	flex: auto;
+	max-width: 300px;
+	margin: 1rem;
+}
+
+.team-area {
+	flex-wrap: wrap;
+	margin: 3rem 0;
+	padding: 0;
+}
+
+.container {
+	padding: 0 !important;
+}
+
+@media screen and (min-width: 1260px) {
+	.container {
+		max-width: 1230px !important;
+	}
+}
+
+@media screen and (max-width: 1200px) {}
+
+@media screen and (max-width: 992px) {
+	.card {
+		max-width: 218px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.card {
+		max-width: 237px;
+	}
+}
+
+@media screen and (max-width: 576px) {
+	.card {
+		max-width: 300px;
+	}
+}
+
+@media screen and (max-width: 350px) {
+	.card {
+		max-width: calc((100vw - 50px));
+	}
+}
