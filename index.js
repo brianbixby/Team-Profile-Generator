@@ -36,7 +36,7 @@ async function mainMenu() {
 		]);
 
 		if (employeeRoleAnswer.role == "ENGINEER" || employeeRoleAnswer.role == "INTERN") {
-			employeeQuestions(employeeRoleAnswer.role);
+			await employeeQuestions(employeeRoleAnswer.role);
 		} else {
 			const generatedHTML = generateHTML(team);
 			await writeToFile(generatedHTML);
@@ -49,60 +49,30 @@ async function mainMenu() {
 	}
 }
 
-async function addIntern(employeeAnswers) {
+async function lastQuestion(employeeAnswers, role) {
 	try {
-		const internAnswer = await inquirer.prompt([
-			{
-				name: "github",
-				message: `What is your INTERN'S SCHOOL?`,
-				type: "input"
-			}
-		]);
-
-		const newIntern = new Intern(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, internAnswer.github);
-		team.push(newIntern);
-		await mainMenu();
-	}
-	catch (err) {
-		if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
-		else console.log(err);
-		return err;
-	}
-}
-
-async function addEngineer(employeeAnswers) {
-	try {
-		const engineerAnswer = await inquirer.prompt([
-			{
-				name: "github",
-				message: `What is your ENGINEER'S GITHUB USERNAME?`,
-				type: "input"
-			}
-		]);
-
-		const newEngineer = new Engineer(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, engineerAnswer.github);
-		team.push(newEngineer);
-		await mainMenu();
-	}
-	catch (err) {
-		if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
-		else console.log(err);
-		return err;
-	}
-}
-
-async function addManager(employeeAnswers) {
-	try {
-		const managerAnswer = await inquirer.prompt([
-			{
-				name: "officeNumber",
-				message: `What is your MANAGER'S OFFICE NUMBER?`,
-				type: "input"
-			}
-		]);
-
-		const newManager = new Manager(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, managerAnswer.officeNumber);
-		team.push(newManager);
+		const question = { name: "other", type: "input" };
+		let otherQuestionAnswer, newEmployee;
+		switch (role) {
+			case "MANAGER":
+				question.message = `What is your MANAGER'S OFFICE NUMBER?`;
+				otherQuestionAnswer = await inquirer.prompt([question]);
+				newEmployee = new Manager(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, otherQuestionAnswer.other);
+				break;
+			case "ENGINEER":
+				question.message = `What is your ENGINEER'S GITHUB USERNAME?`;
+				otherQuestionAnswer = await inquirer.prompt([question]);
+				newEmployee = new Engineer(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, otherQuestionAnswer.other);
+				break;
+			case "INTERN":
+				question.message = `What is your INTERN'S SCHOOL?`;
+				otherQuestionAnswer = await inquirer.prompt([question]);
+				newEmployee = new Intern(employeeAnswers.name, employeeAnswers.id, employeeAnswers.email, otherQuestionAnswer.other);
+				break;
+			default:
+				break;
+		}
+		team.push(newEmployee);
 		await mainMenu();
 	}
 	catch (err) {
@@ -131,19 +101,7 @@ async function employeeQuestions(role) {
 				type: "input"
 			}
 		]);
-		switch (role) {
-			case "MANAGER":
-				await addManager(employeeAnswers);
-				break;
-			case "ENGINEER":
-				await addEngineer(employeeAnswers);
-				break;
-			case "INTERN":
-				await addIntern(employeeAnswers);
-				break;
-			default:
-				break;
-		}
+		await lastQuestion(employeeAnswers, role);
 	}
 	catch (err) {
 		if (err.isTtyError) console.log("Prompt couldn't be rendered in the current environment");
